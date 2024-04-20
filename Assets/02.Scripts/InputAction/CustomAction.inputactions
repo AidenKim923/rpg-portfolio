@@ -1,0 +1,54 @@
+{
+    "name": "CustomAction",
+    "maps": [
+        {
+            "name": "Main",
+            "id": "45c6470a-b650-4fc6-a107-1ff8a6b7a3b2",
+            "actions": [
+                {
+                    "name": "Move",
+                    "type": "Button",
+                    "id": "0fcaa3dc-fbdf-4250-b113-e994accc729f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Display_Fov",
+                    "type": "Value",
+                    "id": "04ee7b3f-9f37-4f1f-9ef0-d832f1567027",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "a7dcbfed-cdad-405c-ab46-d2af48459efd",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d8ac7d8d-c4d1-4f72-b550-12899c9ad2d5",
+                    "path": "<Mouse>/scroll",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Display_Fov",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
