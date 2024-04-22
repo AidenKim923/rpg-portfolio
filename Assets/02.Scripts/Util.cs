@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Minsung.UTIL
@@ -112,6 +113,21 @@ namespace Minsung.UTIL
             }
             return Success;
         }
+
+        public static void RunCoroutine(ref Coroutine _co1, Coroutine _co2, MonoBehaviour _mono)
+        {
+            if (_co1 == null)
+            {
+                _co1 = _co2;
+            }
+            else
+            {
+                _mono.StopCoroutine(_co1);
+                _co1 = _co2;
+            }
+        }
+
+
         #endregion
 
     }

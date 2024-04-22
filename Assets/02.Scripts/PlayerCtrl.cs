@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Minsung.Weapon;
+using Minsung.UTIL;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.AI;
@@ -35,10 +36,32 @@ namespace Minsung.Player
         private PlayerState m_ePlayerState = PlayerState.IDLE;
         private readonly int m_hashWater = Animator.StringToHash("IsWater");
 
-        public bool  m_bIsAttacking = false;
-        public Minsung.PlayerCombat.PlayerCombat playerCombat;
         public Minsung.Weapon.Weapon m_weapon;
 
+        /// <summary>
+        /// 
+        /// </summary>
+
+        private readonly int[] m_arrHashAttack = new int[] { Animator.StringToHash("DoAttack1"), Animator.StringToHash("DoAttack2")
+                                                              ,Animator.StringToHash("DoAttack3"), Animator.StringToHash("DoAttack4") };
+
+        [Header("공격 관련")]
+        [SerializeField] private float m_fAttackMovementPower = 3.0f;
+        public bool m_bIsAttacking = false;
+        private int m_nAttackIndex = 0;
+        [SerializeField, Tooltip("공격콤보 초기화 시간")]
+        private float m_fAttackInitTime = 1.5f;
+        [SerializeField, Tooltip("기본공격 딜레이")]
+        private float m_fAttackDelay = 0.2f;
+        private int m_nMaxAttackIndex = 4;
+        
+        private Coroutine m_CoAttackInitTime;
+        private Coroutine m_CoAttackComboDelay;
+
+        /// <summary> 공격콤보 초기화 시간과 비교하며 판단할 변수 </summary>
+        private float m_fAttackRunTime = 0.0f;
+        private WaitForSeconds m_wfsAttackInitSeconds;
+        private WaitForSeconds m_wfsAttackDelay;
         #endregion
 
         /**************************************************************
@@ -56,15 +79,11 @@ namespace Minsung.Player
 
             m_agent.speed = 5.0f;
             m_weapon = GetComponentInChildren<Minsung.Weapon.Weapon>();
-            playerCombat = GetComponent<Minsung.PlayerCombat.PlayerCombat>();
-        }
 
-        private void Start()
-        {
-            StartCoroutine(UpdatePlayerState());
-            StartCoroutine(CheckPlayterState());
+            m_wfsAttackInitSeconds  = new WaitForSeconds(m_fAttackInitTime);
+            m_wfsAttackDelay        = new WaitForSeconds(m_fAttackDelay);
 
-            Minsung.PlayerCombat.PlayerCombat.OnPlayerAttack += AttackStart;
+            m_nMaxAttackIndex = m_arrHashAttack.Length;
         }
 
         void OnEnable()
@@ -72,6 +91,11 @@ namespace Minsung.Player
             m_input.Enable();
         }
 
+        private void Start()
+        {
+            StartCoroutine(UpdatePlayerState());
+            StartCoroutine(CheckPlayterState());
+        }
 
         private void OnTriggerEnter(Collider _coll)
         {
@@ -92,7 +116,10 @@ namespace Minsung.Player
         void Update()
         {
             MoveForMousePos();
-
+            if (Input.GetButtonDown("Fire1"))
+            {
+                Attack();
+            }
         }
 
         private void LateUpdate()
@@ -134,23 +161,6 @@ namespace Minsung.Player
         public void AttackColliderOff()
         {
             m_weapon.AttackEnd();
-        }
-
-        public void AttackStart()
-        {
-            m_bIsAttacking = true;
-            m_bisClick = false;
-            m_agent.enabled = false;
-            Debug.Log("Playerctrl AttackStart");
-
-        }
-
-        public void AttackEnd()
-        {
-            m_bIsAttacking = false;
-            m_agent.enabled = true;
-            playerCombat.AttackEnd();
-            //여기서 콤보 종료 시간
         }
         #endregion
 
@@ -323,6 +333,58 @@ namespace Minsung.Player
                 m_anim.SetFloat("Movement", m_agent.velocity.magnitude);
             }
         }
+
+        #region Attack
+
+        private void Attack()
+        {
+            if (!m_bIsAttacking)
+            {
+                m_bIsAttacking = true;
+                Util.RunCoroutine(ref m_CoAttackInitTime, StartCoroutine(AttackInitDelaySeconds()), this);
+                Util.RunCoroutine(ref m_CoAttackComboDelay, StartCoroutine(AttackComboDelay()), this);
+
+
+                m_anim.SetTrigger(m_arrHashAttack[m_nAttackIndex]);
+
+                m_nAttackIndex++;
+                if (m_nAttackIndex >= m_nMaxAttackIndex)
+                {
+                    m_nAttackIndex = 0;
+                }
+
+            }
+        }
+
+        private IEnumerator AttackInitDelaySeconds()
+        {
+            float t = 0.0f;
+            float time = 0.0f;
+            float destTime = m_fAttackInitTime;
+
+            while (time < 1.0f)
+            {
+                t += Time.deltaTime;
+                time = t / destTime;
+                
+                yield return null;
+            }
+            m_nAttackIndex = 0;
+        }
+
+        private IEnumerator AttackComboDelay()
+        {
+            yield return m_wfsAttackDelay;
+            m_bIsAttacking = false;
+        }
+
+
+        #endregion
+
+
+
+
+
         #endregion
     }
 

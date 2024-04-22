@@ -4,5 +4,6 @@ public enum MonsterState
     TRACE,
     ATTACK,
     HITTED,
-    DIE
+    DIE,
+    ATTACK_READY
 }
