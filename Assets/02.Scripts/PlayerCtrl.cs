@@ -378,6 +378,43 @@ namespace Minsung.Player
             m_bIsAttacking = false;
         }
 
+        /// <summary> Player의 스킬 공격 
+        /// <para/> SKill Manager의 플레이어 스킬Index 를 지닌
+        /// <para/> skill_Datas[] 배열 이용
+        /// </summary>
+        protected override IEnumerator SkillAttack(int skillNum)
+        {
+            //현재 사용할 스킬. 0번째 부터 시작함.
+            int skill_Idx = skillNum - 1;
+            SkillData curSkill = _skill_Datas[skill_Idx];
+
+            //획득하지 않은 상태면
+            if (curSkill == null) yield break;
+            //보유 마나보다 스킬 마나가 크다면 공격 중단.
+            if (m_nCurMP < curSkill.GetSkillManaAmount()) yield break;
+
+            //사용 가능 상태가 아니면
+            if (curSkill.GetInAvailable())
+            {
+                //빨간색 이미지가 깜빡거림
+                _skillMgr.SkillUsedWarring(skill_Idx);
+                yield break;
+            }
+
+
+            m_bisAttack = true;
+
+            _anim.SetTrigger(curSkill.GetAnimHash());
+
+            _skillMgr.UseSkill(curSkill, this, ref m_nCurMP);
+            _playerStatMgr.UpdateMPbar(m_nCurMP, m_nMaxMP);
+
+            _skillMgr.StartSkillCoolTime(skill_Idx, curSkill);
+
+            yield return new WaitUntil(() => _anim.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f);
+            m_bisAttack = false;
+        }
+
 
         #endregion
 
