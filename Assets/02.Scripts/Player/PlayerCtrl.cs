@@ -64,6 +64,9 @@ namespace Minsung.PLAYER
         private float m_fAttackRunTime = 0.0f;
         private WaitForSeconds m_wfsAttackInitSeconds;
         private WaitForSeconds m_wfsAttackDelay;
+
+        public SkillData curSkill;
+        public int m_nSkillIndex;
         #endregion
 
         /**************************************************************
@@ -406,37 +409,37 @@ namespace Minsung.PLAYER
         /// <para/> SKill Manager의 플레이어 스킬Index 를 지닌
         /// <para/> skill_Datas[] 배열 이용
         /// </summary>
-        public SkillData curSkill;
-        public int m_nSkillIndex;
         protected void SkillAttack(int skillNum)
         {
-            //현재 사용할 스킬. 0번째 부터 시작함.
-            m_nSkillIndex = skillNum - 1;
-            Debug.Log($"{m_nSkillIndex} 번째 스킬 사용");
-            curSkill = m_PlayerSkillMgr.m_lstPlayerSkillData[m_nSkillIndex];
 
-
-            //획득하지 않은 상태면
-            if (curSkill == null) return;
-            //보유 마나보다 스킬 마나가 크다면 공격 중단.
-            //    if (m_nCurMP < curSkill.GetSkillManaAmount()) yield break;
-
-            //사용 가능 상태가 아니면
-            if (curSkill.IsOnCooltime)
+            if (true)
             {
-                Debug.Log("스킬 쿨타임 중");
-                return;
+                //현재 사용할 스킬. 0번째 부터 시작함.
+                m_nSkillIndex = skillNum - 1;
+                Debug.Log($"{m_nSkillIndex} 번째 스킬 사용");
+                curSkill = m_PlayerSkillMgr.m_lstPlayerSkillData[m_nSkillIndex];
+
+
+                //획득하지 않은 상태면
+                if (curSkill == null) return;
+                //보유 마나보다 스킬 마나가 크다면 공격 중단.
+                //    if (m_nCurMP < curSkill.GetSkillManaAmount()) yield break;
+
+                //사용 가능 상태가 아니면
+                if (curSkill.IsOnCooltime)
+                {
+                    Debug.Log("스킬 쿨타임 중");
+                    return;
+                }
+
+                StartCoroutine(CheckCoolTime(curSkill));
+
+                m_bIsAttacking = true;
+
+                m_anim.SetTrigger(curSkill.GetAnimHash());
+
+                m_bIsAttacking = false;
             }
-
-            StartCoroutine(CheckCoolTime(curSkill));
-
-            m_bIsAttacking = true;
-
-            m_anim.SetTrigger(curSkill.GetAnimHash());
-
-            m_bIsAttacking = false;
-
-
 
         }
 
@@ -447,12 +450,7 @@ namespace Minsung.PLAYER
             _skillData.IsOnCooltime = false;
         }
 
-
         #endregion
-
-
-
-
 
         #endregion
     }

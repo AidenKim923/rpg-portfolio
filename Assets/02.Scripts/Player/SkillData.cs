@@ -34,6 +34,7 @@ namespace Minsung.SKILLDATA
         [SerializeField] private float m_fSkillCoolTime;
         [SerializeField] private float m_fMpAmount;
         [SerializeField] private float m_fSkillRunningTime;
+        [SerializeField] private float m_fSkillRange;
         [SerializeField] private bool m_bIsAcquired;
 
         #endregion
@@ -121,6 +122,12 @@ namespace Minsung.SKILLDATA
         {
             get { return m_fSkillRunningTime; }
             set { m_fSkillRunningTime = value; }
+        }
+
+        public float SkillRange
+        {
+            get { return m_fSkillRange; }
+            set { m_fSkillRange = value; }
         }
 
         public bool IsAcquired
