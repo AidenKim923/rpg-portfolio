@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Minsung.Monster
+namespace Minsung.MONSTERCONTROL
 {
     public class MonsterCtrl : MonoBehaviour
     {
@@ -17,25 +17,25 @@ namespace Minsung.Monster
         [SerializeField] private MonsterState m_eMonsterState = MonsterState.IDLE;
 
         [Header("Monster")]
-        [SerializeField] private float m_fTraceDistance    = 10.0f;
-        [SerializeField] private float m_fAttackDistance   = 2.0f;
-        [SerializeField] private float m_fAttackDelayTime  = 5.0f;
-        [SerializeField] private bool  m_bIsDie            = false;
-        [SerializeField] private bool  m_bIsAttack         = false;
+        [SerializeField] private float m_fTraceDistance = 10.0f;
+        [SerializeField] private float m_fAttackDistance = 2.0f;
+        [SerializeField] private float m_fAttackDelayTime = 5.0f;
+        [SerializeField] private bool m_bIsDie = false;
+        [SerializeField] private bool m_bIsAttack = false;
 
         private Transform monsterTr;
         private Transform playerTr;
         private NavMeshAgent m_agent;
 
         private Animator m_anim;
-        private readonly int hashTrace          = Animator.StringToHash("IsTrace");
-        private readonly int hashAttack         = Animator.StringToHash("DoAttack");
-        private readonly int hashDie            = Animator.StringToHash("IsDie");
-        private readonly int hashCycleOffset    = Animator.StringToHash("CycleOffset");
+        private readonly int hashTrace = Animator.StringToHash("IsTrace");
+        private readonly int hashAttack = Animator.StringToHash("DoAttack");
+        private readonly int hashDie = Animator.StringToHash("IsDie");
+        private readonly int hashCycleOffset = Animator.StringToHash("CycleOffset");
 
         private Coroutine coCheckAttack;
 
-        
+
         #endregion
 
         /**************************************************************
@@ -74,7 +74,7 @@ namespace Minsung.Monster
             if (_coll.gameObject.CompareTag("PlayerMeleeAttack"))
             {
                 Debug.Log("몬스터 피격");
-                m_eMonsterState = MonsterState.HITTED;
+                m_eMonsterState = MonsterState.DIE;
             }
         }
 
@@ -85,7 +85,7 @@ namespace Minsung.Monster
 
         void Update()
         {
-            
+
         }
 
         private void LateUpdate()
@@ -96,6 +96,21 @@ namespace Minsung.Monster
         void OnDisable()
         {
 
+        }
+
+        #endregion
+
+        /**************************************************************
+         * 
+         *                  Public Method
+         * 
+         **************************************************************/
+
+        #region Public Method
+
+        public Vector3 GetMonsterPosition()
+        {
+            return monsterTr.position;
         }
 
         #endregion
