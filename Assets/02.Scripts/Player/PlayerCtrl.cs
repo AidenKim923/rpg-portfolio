@@ -8,6 +8,9 @@ using UnityEngine.InputSystem;
 using UnityEngine.AI;
 using Minsung.SKILLDATA;
 using UnityEngine.UIElements.Experimental;
+using Minsung.MONSTERCONTROL;
+using UnityEditor.Rendering;
+using System;
 
 
 namespace Minsung.PLAYER
@@ -67,6 +70,10 @@ namespace Minsung.PLAYER
 
         public SkillData curSkill;
         public int m_nSkillIndex;
+
+        GameObject m_goMonster;
+        MonsterCtrl m_MonsterCtrl;
+        public LayerMask MonsterLayer;
         #endregion
 
         /**************************************************************
@@ -186,6 +193,16 @@ namespace Minsung.PLAYER
             {
                 Debug.LogError("PlayerSkillManager is Null");
             }
+        }
+
+
+        /// <summary>
+        /// 몬스터 컨트롤 넘겨주는 함수
+        /// </summary>
+        /// <returns></returns>
+        public MonsterCtrl GetMonster()
+        {
+            return m_MonsterCtrl;
         }
 
         #endregion
@@ -404,50 +421,118 @@ namespace Minsung.PLAYER
             yield return m_wfsAttackDelay;
             m_bIsAttacking = false;
         }
-
-        /// <summary> Player의 스킬 공격 
-        /// <para/> SKill Manager의 플레이어 스킬Index 를 지닌
-        /// <para/> skill_Datas[] 배열 이용
+        /// <summary>
+        /// 플레이어 스킬 공격 함수
         /// </summary>
+        /// <param name="skillNum"></param>
         protected void SkillAttack(int skillNum)
         {
 
-            if (true)
+            //현재 사용할 스킬. 0번째 부터 시작함.
+            m_nSkillIndex = skillNum - 1;
+            // Debug.Log($"{m_nSkillIndex} 번째 스킬 사용");
+            curSkill = m_PlayerSkillMgr.m_lstPlayerSkillData[m_nSkillIndex];
+            float fCurrentSkillDistance = curSkill.SkillRange;
+            Debug.Log(fCurrentSkillDistance);
+            Debug.Log("스킬 사용 시도");
+
+            //획득하지 않은 상태면
+            if (curSkill == null) return;
+            //보유 마나보다 스킬 마나가 크다면 공격 중단.
+            //    if (m_nCurMP < curSkill.GetSkillManaAmount()) yield break;
+
+            //사용 가능 상태가 아니면
+            if (curSkill.IsOnCooltime)
             {
-                //현재 사용할 스킬. 0번째 부터 시작함.
-                m_nSkillIndex = skillNum - 1;
-                Debug.Log($"{m_nSkillIndex} 번째 스킬 사용");
-                curSkill = m_PlayerSkillMgr.m_lstPlayerSkillData[m_nSkillIndex];
-
-
-                //획득하지 않은 상태면
-                if (curSkill == null) return;
-                //보유 마나보다 스킬 마나가 크다면 공격 중단.
-                //    if (m_nCurMP < curSkill.GetSkillManaAmount()) yield break;
-
-                //사용 가능 상태가 아니면
-                if (curSkill.IsOnCooltime)
-                {
-                    Debug.Log("스킬 쿨타임 중");
-                    return;
-                }
-
-                StartCoroutine(CheckCoolTime(curSkill));
-
-                m_bIsAttacking = true;
-
-                m_anim.SetTrigger(curSkill.GetAnimHash());
-
-                m_bIsAttacking = false;
+                Debug.Log("스킬 쿨타임 중");
+                return;
             }
 
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity, GetClickableLayer()))
+            {
+                Vector3 v3MousePosition = Input.mousePosition;
+                float fMonsterDistance;
+                (m_MonsterCtrl, fMonsterDistance) = FindClosestMonster(v3MousePosition);
+
+                if (m_goMonster != null)
+                {
+                    Debug.Log("몬스터가 있습니다. ");
+                    if (m_MonsterCtrl != null)
+                    {
+                        Debug.Log("몬스터가 할당되었습니다.");
+                        if (fMonsterDistance > fCurrentSkillDistance)
+                        {
+
+                            Debug.Log("몬스터가 너무 멀어서 스킬 사용을 취소합니다.");
+                            return;
+                        }
+                        else
+                        {
+                            Vector3 v3MonsterPosition = m_goMonster.transform.position;
+                            Debug.Log("몬스터 발견 : " + m_MonsterCtrl.name);
+                            StartCoroutine(CheckCoolTime(curSkill));
+
+                            m_bIsAttacking = true;
+
+                            m_anim.SetTrigger(curSkill.GetAnimHash());
+
+                            m_bIsAttacking = false;
+                        }
+                    }
+                    else
+                    {
+
+                    }
+                }
+                else
+                {
+                    Debug.Log("몬스터가 없습니다.");
+                }
+
+            }
         }
 
+        /// <summary>
+        /// 스킬 쿨타임 체크 함수
+        /// </summary>
+        /// <param name="_skillData"></param>
+        /// <returns></returns>
         public IEnumerator CheckCoolTime(SkillData _skillData)
         {
             _skillData.IsOnCooltime = true;
             yield return new WaitForSeconds(_skillData.SkillCoolTime);
             _skillData.IsOnCooltime = false;
+        }
+
+        /// <summary>
+        /// 가장 가까운 몬스터와 거리를 찾는 함수
+        /// </summary>
+        /// <param name="_m_v3MousePosition"></param>
+        /// <returns>
+        /// GameObject, float
+        /// </returns>
+        private (MonsterCtrl, float) FindClosestMonster(Vector3 _m_v3MousePosition)
+        {
+            Ray ray = Camera.main.ScreenPointToRay(_m_v3MousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, 100, MonsterLayer))
+            {
+                m_goMonster = hit.collider.gameObject;
+                Debug.Log(m_goMonster.name);
+                MonsterCtrl m_MonsterCtrl = m_goMonster.GetComponent<MonsterCtrl>();
+                float distance = Vector3.Distance(transform.position, m_goMonster.transform.position);
+                return (m_MonsterCtrl, distance);
+            }
+            else
+            {
+                m_MonsterCtrl = null;
+                m_goMonster = null;
+                return (null, 0f);
+            }
         }
 
         #endregion
