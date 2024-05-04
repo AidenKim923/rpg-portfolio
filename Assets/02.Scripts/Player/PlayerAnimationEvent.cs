@@ -82,7 +82,6 @@ namespace Minsung.PLAYERANIMATIONEVENT
             m_goCloneEffect.SetActive(true);
             coroutine = StartCoroutine(OffSkillEffect(m_PlayerCtrl.curSkill.SkillRunningTime));
 
-
         }
 
         public void DestroyEffect()
