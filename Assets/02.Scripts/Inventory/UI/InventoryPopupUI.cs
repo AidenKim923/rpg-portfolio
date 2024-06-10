@@ -4,10 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-// 날짜 : 2021-04-13 PM 7:47:35
-// 작성자 : Rito
 
-namespace Rito
+namespace Minsung
 {
     /// <summary> 인벤토리 UI 위에 띄울 작은 팝업들 관리 </summary>
     public class InventoryPopupUI : MonoBehaviour
@@ -19,15 +17,15 @@ namespace Rito
         // 1. 아이템 버리기 확인 팝업
         [Header("Confirmation Popup")]
         [SerializeField] private GameObject _confirmationPopupObject;
-        [SerializeField] private Text   _confirmationItemNameText;
-        [SerializeField] private Text   _confirmationText;
+        [SerializeField] private Text _confirmationItemNameText;
+        [SerializeField] private Text _confirmationText;
         [SerializeField] private Button _confirmationOkButton;     // Ok
         [SerializeField] private Button _confirmationCancelButton; // Cancel
 
         // 2. 수량 입력 팝업
         [Header("Amount Input Popup")]
         [SerializeField] private GameObject _amountInputPopupObject;
-        [SerializeField] private Text       _amountInputItemNameText;
+        [SerializeField] private Text _amountInputItemNameText;
         [SerializeField] private InputField _amountInputField;
         [SerializeField] private Button _amountPlusButton;        // +
         [SerializeField] private Button _amountMinusButton;       // -
@@ -134,7 +132,7 @@ namespace Rito
                 {
                     // Shift 누르면 10씩 감소
                     int nextAmount = Input.GetKey(KeyCode.LeftShift) ? amount - 10 : amount - 1;
-                    if(nextAmount < 1)
+                    if (nextAmount < 1)
                         nextAmount = 1;
                     _amountInputField.text = nextAmount.ToString();
                 }
@@ -171,7 +169,7 @@ namespace Rito
                     amount = _maxAmount;
                 }
 
-                if(flag)
+                if (flag)
                     _amountInputField.text = amount.ToString();
             });
         }

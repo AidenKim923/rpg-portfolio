@@ -3,10 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// 날짜 : 2021-03-21 PM 11:01:27
-// 작성자 : Rito
 
-namespace Rito.InventorySystem
+namespace Minsung.InventorySystem
 {
     /// <summary> 수량을 셀 수 있는 아이템 </summary>
     public abstract class CountableItem : Item
@@ -51,9 +49,9 @@ namespace Rito.InventorySystem
         public CountableItem SeperateAndClone(int amount)
         {
             // 수량이 한개 이하일 경우, 복제 불가
-            if(Amount <= 1) return null;
+            if (Amount <= 1) return null;
 
-            if(amount > Amount - 1)
+            if (amount > Amount - 1)
                 amount = Amount - 1;
 
             Amount -= amount;

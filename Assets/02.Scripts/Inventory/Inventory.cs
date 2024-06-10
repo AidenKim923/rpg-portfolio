@@ -49,10 +49,7 @@ using UnityEngine;
     - void SortAll() : 앞에서부터 아이템 슬롯 채우면서 정렬
 */
 
-// 날짜 : 2021-03-07 PM 7:33:52
-// 작성자 : Rito
-
-namespace Rito.InventorySystem
+namespace Minsung.InventorySystem
 {
     public class Inventory : MonoBehaviour
     {
@@ -62,9 +59,6 @@ namespace Rito.InventorySystem
         #region .
         /// <summary> 아이템 수용 한도 </summary>
         public int Capacity { get; private set; }
-
-        // /// <summary> 현재 아이템 개수 </summary>
-        //public int ItemCount => _itemArray.Count;
 
         #endregion
         /***********************************************************************

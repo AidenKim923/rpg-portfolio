@@ -3,10 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// 날짜 : 2021-03-28 PM 10:55:00
-// 작성자 : Rito
 
-namespace Rito.InventorySystem
+namespace Minsung.InventorySystem
 {
     /// <summary> 장비 아이템</summary>
     public abstract class EquipmentItem : Item
@@ -19,8 +17,8 @@ namespace Rito.InventorySystem
             get => _durability;
             set
             {
-                if(value < 0) value = 0;
-                if(value > EquipmentData.MaxDurability)
+                if (value < 0) value = 0;
+                if (value > EquipmentData.MaxDurability)
                     value = EquipmentData.MaxDurability;
 
                 _durability = value;

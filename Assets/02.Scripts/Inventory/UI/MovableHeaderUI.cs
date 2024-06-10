@@ -1,10 +1,8 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-// 날짜 : 2021-03-18 PM 9:05:42
-// 작성자 : Rito
 
-namespace Rito
+namespace Minsung
 {
     /// <summary> 헤더 드래그 앤 드롭에 의한 UI 이동 </summary>
     public class MovableHeaderUI : MonoBehaviour, IPointerDownHandler, IDragHandler
@@ -18,7 +16,7 @@ namespace Rito
         private void Awake()
         {
             // 이동 대상 UI를 지정하지 않은 경우, 자동으로 부모로 초기화
-            if(_targetTr == null)
+            if (_targetTr == null)
                 _targetTr = transform.parent;
         }
 

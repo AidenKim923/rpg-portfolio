@@ -3,10 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// 날짜 : 2021-03-28 PM 10:42:48
-// 작성자 : Rito
 
-namespace Rito.InventorySystem
+namespace Minsung.InventorySystem
 {
     /// <summary> 소비 아이템 정보 </summary>
     [CreateAssetMenu(fileName = "Item_Portion_", menuName = "Inventory System/Item Data/Portion", order = 3)]

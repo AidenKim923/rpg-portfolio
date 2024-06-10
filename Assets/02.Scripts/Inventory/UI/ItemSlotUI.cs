@@ -5,10 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-// 날짜 : 2021-03-07 PM 10:20:05
-// 작성자 : Rito
 
-namespace Rito.InventorySystem
+namespace Minsung.InventorySystem
 {
     public class ItemSlotUI : MonoBehaviour
     {
@@ -178,7 +176,7 @@ namespace Rito.InventorySystem
         public void SetItemAccessibleState(bool value)
         {
             // 중복 처리는 지양
-            if(_isAccessibleItem == value) return;
+            if (_isAccessibleItem == value) return;
 
             if (value)
             {
@@ -187,7 +185,7 @@ namespace Rito.InventorySystem
             }
             else
             {
-                _iconImage.color  = InaccessibleIconColor;
+                _iconImage.color = InaccessibleIconColor;
                 _amountText.color = InaccessibleIconColor;
             }
 
@@ -272,7 +270,7 @@ namespace Rito.InventorySystem
         /// <summary> 하이라이트 이미지를 아이콘 이미지의 상단/하단으로 표시 </summary>
         public void SetHighlightOnTop(bool value)
         {
-            if(value)
+            if (value)
                 _highlightRect.SetAsLastSibling();
             else
                 _highlightRect.SetAsFirstSibling();

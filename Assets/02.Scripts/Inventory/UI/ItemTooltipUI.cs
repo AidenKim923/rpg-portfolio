@@ -4,10 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-// 날짜 : 2021-04-01 PM 8:33:22
-// 작성자 : Rito
 
-namespace Rito.InventorySystem
+namespace Minsung.InventorySystem
 {
     /// <summary> 슬롯 내의 아이템 아이콘에 마우스를 올렸을 때 보이는 툴팁 </summary>
     public class ItemTooltipUI : MonoBehaviour
@@ -65,7 +63,7 @@ namespace Rito.InventorySystem
         {
             // 본인이 Graphic(UI)를 상속하면 레이캐스트 타겟 해제
             tr.TryGetComponent(out Graphic gr);
-            if(gr != null)
+            if (gr != null)
                 gr.raycastTarget = false;
 
             // 자식이 없으면 종료
@@ -96,7 +94,7 @@ namespace Rito.InventorySystem
             // 캔버스 스케일러에 따른 해상도 대응
             float wRatio = Screen.width / _canvasScaler.referenceResolution.x;
             float hRatio = Screen.height / _canvasScaler.referenceResolution.y;
-            float ratio = 
+            float ratio =
                 wRatio * (1f - _canvasScaler.matchWidthOrHeight) +
                 hRatio * (_canvasScaler.matchWidthOrHeight);
 
