@@ -20,9 +20,9 @@ namespace Minsung.Cam
         [SerializeField] private Transform target;
         [SerializeField] private Vector3 offset;
 
-        [SerializeField] private float rotationSpeed    = 5.0f;
-        [SerializeField] private float minZoomDistance  = 2.0f;
-        [SerializeField] private float maxZoomDistance  = 10.0f;
+        [SerializeField] private float rotationSpeed = 5.0f;
+        [SerializeField] private float minZoomDistance = 2.0f;
+        [SerializeField] private float maxZoomDistance = 10.0f;
 
         private CustomAction m_input;
 
@@ -79,7 +79,7 @@ namespace Minsung.Cam
         #region Private Method
         private void AssignInputs()
         {
-            m_input.Main.Display_Fov.performed += ctx=> UpdateFov(ctx);
+            m_input.Main.Display_Fov.performed += ctx => UpdateFov(ctx);
         }
 
         private void UpdateFov(InputAction.CallbackContext _ctx)
@@ -106,6 +106,20 @@ namespace Minsung.Cam
                 offset = maxOffset;
             }
         }
+        #endregion
+
+        /**************************************************************
+         * 
+         *                  Public Method
+         * 
+         **************************************************************/
+
+        #region Public Method
+        public void SetTarget(Transform _target)
+        {
+            target = _target;
+        }
+
         #endregion
 
     }
